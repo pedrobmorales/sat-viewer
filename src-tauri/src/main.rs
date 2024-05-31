@@ -3,21 +3,17 @@
 use std::fs;
 use varisat::{dimacs, solver::Solver, Lit};
 
+const EXTENSION: &str = "cnf";
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn greet(name: &str) -> String {
-    let foo = tauri_api::dialog::select(Some("cnf"), Some("."));
-    let resp = foo.unwrap();
-    let choice = match resp {
-        tauri_api::dialog::Response::Okay(x) => {
-            dbg!(&x);
-            x
-        }
-        tauri_api::dialog::Response::OkayMultiple(x) => {
-            dbg!(&x);
-            "".to_string()
-        }
-        tauri_api::dialog::Response::Cancel => todo!(),
+fn select_formula(name: &str) -> String {
+    let foo = tauri_api::dialog::select(Some(EXTENSION), Some(".."));
+    use tauri_api::dialog::Response::Okay;
+    let choice = if let Ok(Okay(file_name)) = foo {
+        file_name
+    } else {
+        return "File not selected or not found".to_string();
     };
 
     dbg!(&choice);
@@ -45,7 +41,7 @@ fn greet(name: &str) -> String {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![select_formula])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
