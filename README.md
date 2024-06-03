@@ -1,6 +1,10 @@
-# Tauri + React + Typescript
+# SAT Viewer
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+This project is a viewer application for Boolean Satisfiability formulas, usually in Conjunctive Normal Form with exactly 3 literals per clause (3CNF-SAT).  This is my attempt at understanding what makes a formula unsatisfiable.  A formula is satisfiable unless it has an unsatisfiable core, that is, a subset of the formula that contains a contradiction.  This viewer allows users to peek at an analysis of the formula.  It is a work in progress.  It does simple things like loading a formula from a DIMACS file on disk and then counting how many times a variable appears in positive and negative literals.  
+
+This application is implemented in Rust and TypeScript using Tauri and React.  
+
+TODO: Installation instructions for Rust, Tauri and npm.
 
 ## Recommended IDE Setup
 
