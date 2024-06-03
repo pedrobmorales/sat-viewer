@@ -3,12 +3,9 @@ import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import { PrimeReactProvider } from 'primereact/api';
 
-type FormulaDetails = {
-  num_variables: number,
-  num_clauses: number,
+import { FormulaDetails } from "./models";
+import Counts from "./Counts";
 
-
-}
 function App() {
   const [formula, setFormula] = useState({ num_variables: 0, num_clauses: 0 } as FormulaDetails);
 
@@ -16,6 +13,7 @@ function App() {
     setFormula({
       num_clauses: 0,
       num_variables: 0,
+      counts: [],
     });
 
   }
@@ -24,12 +22,7 @@ function App() {
     setFormula(await invoke("select_formula", {}));
   }
 
-  let content;
-  if (formula.num_clauses != 0) {
-    content = <div>Not null formula</div>
-  } else {
-    content = <div>Yes null formula</div>
-  }
+  let content = Counts(formula);
 
   console.log("Formula", formula);
   return (
@@ -49,10 +42,8 @@ function App() {
           <button type="submit">Select Formula</button>
         </form>
         <button onClick={clearFormula}>Clear Formula</button>
-
-        <p>{content}</p>
-        <p>Vars: {formula.num_variables} Clauses: {formula.num_clauses}</p>
       </div>
+      {content}
     </PrimeReactProvider>
   );
 }
