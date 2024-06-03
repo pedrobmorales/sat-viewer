@@ -11,6 +11,7 @@ function App() {
 
   function clearFormula() {
     setFormula({
+      file_name: "",
       num_clauses: 0,
       num_variables: 0,
       counts: [],
@@ -22,9 +23,14 @@ function App() {
     setFormula(await invoke("select_formula", {}));
   }
 
-  let content = Counts(formula);
+  async function expandFormula() {
+    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+    setFormula(await invoke("expand_formula", { fileName: formula.file_name }));
+  }
 
-  console.log("Formula", formula);
+  let content = Counts(formula);
+  let exp = <button onClick={expandFormula}>Expand</button>;
+
   return (
     <PrimeReactProvider>
       <div className="container">
@@ -32,13 +38,17 @@ function App() {
 
         <p>Select a formula in DIMACS format with .cnf extension from your file system.</p>
         <div className="row">
-          <button onClick={select_formula}>Select Formula</button>
-          <button onClick={clearFormula}>Clear Formula</button>
+          <button onClick={select_formula}>Select</button>
+          <button onClick={clearFormula}>Clear</button>
+          {formula.num_clauses > 0 ? exp : <></>}
         </div>
       </div>
       {content}
     </PrimeReactProvider >
   );
 }
+
+// To render a component
+// 
 
 export default App;

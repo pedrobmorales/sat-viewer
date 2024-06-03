@@ -6,14 +6,15 @@ use tauri_api::dialog::select;
 use varisat::{cnf, dimacs, solver::Solver, Lit};
 const EXTENSION: &str = "cnf";
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Default, Debug)]
 pub struct FormulaDetails {
+    file_name: String,
     num_variables: usize,
     num_clauses: usize,
     counts: Vec<LiteralCounts>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Default, Debug, Clone)]
 pub struct LiteralCounts {
     positive: usize,
     negative: usize,
@@ -21,16 +22,13 @@ pub struct LiteralCounts {
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn select_formula() -> FormulaDetails {
+    dbg!("Hi select_formula");
     let foo = select(Some(EXTENSION), Some(".."));
     use tauri_api::dialog::Response::Okay;
     let choice = if let Ok(Okay(file_name)) = foo {
         file_name
     } else {
-        return FormulaDetails {
-            num_clauses: 0,
-            num_variables: 0,
-            counts: vec![],
-        };
+        return FormulaDetails::default();
     };
 
     let dimacs_cnf = fs::read(&choice).unwrap();
@@ -57,15 +55,31 @@ fn select_formula() -> FormulaDetails {
     }
 
     FormulaDetails {
+        file_name: choice,
         num_clauses: cnf_formula.len(),
         num_variables: cnf_formula.var_count(),
         counts: literal_counts,
     }
 }
 
+#[tauri::command]
+fn expand_formula(file_name: String) -> FormulaDetails {
+    dbg!("Hi expand formula");
+    let dimacs_cnf = fs::read(&file_name).unwrap();
+    let mut parser = dimacs::DimacsParser::new();
+    parser.parse_chunk(dimacs_cnf.as_slice()).unwrap();
+    let cnf_formula = parser.take_formula();
+    FormulaDetails {
+        file_name: file_name,
+        num_clauses: 3,
+        num_variables: 1,
+        counts: vec![],
+    }
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![select_formula])
+        .invoke_handler(tauri::generate_handler![select_formula, expand_formula])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
