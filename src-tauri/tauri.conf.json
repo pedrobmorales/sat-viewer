@@ -22,7 +22,7 @@
     },
     "windows": [
       {
-        "title": "sat-viewer",
+        "title": "Boolean SAT Formula Viewer",
         "width": 800,
         "height": 600
       }

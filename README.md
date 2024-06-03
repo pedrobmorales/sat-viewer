@@ -4,8 +4,20 @@ This project is a viewer application for Boolean Satisfiability formulas, usuall
 
 This application is implemented in Rust and TypeScript using Tauri and React.  
 
-TODO: Installation instructions for Rust, Tauri and npm.
+## Recommended Setup
 
-## Recommended IDE Setup
+The documentation to install Tauri contains great information for installing Rust and Node, which are both required for Tauri.
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- [Install Tauri Prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites/)
+- [VS Code](https://code.visualstudio.com/)
+- [Tauri Extension](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) 
+- [rust-analyzer Extension](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+
+## Running the Application
+
+To run the application, it is sufficient to do:
+
+```
+npm install
+npm run tauri dev
+```

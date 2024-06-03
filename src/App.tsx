@@ -31,20 +31,13 @@ function App() {
         <h1>SAT Formula Viewer</h1>
 
         <p>Select a formula in DIMACS format with .cnf extension from your file system.</p>
-
-        <form
-          className="row"
-          onSubmit={(e) => {
-            e.preventDefault();
-            select_formula();
-          }}
-        >
-          <button type="submit">Select Formula</button>
-        </form>
-        <button onClick={clearFormula}>Clear Formula</button>
+        <div className="row">
+          <button onClick={select_formula}>Select Formula</button>
+          <button onClick={clearFormula}>Clear Formula</button>
+        </div>
       </div>
       {content}
-    </PrimeReactProvider>
+    </PrimeReactProvider >
   );
 }
 
