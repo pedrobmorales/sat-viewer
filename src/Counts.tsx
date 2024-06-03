@@ -13,7 +13,7 @@ function Counts(formula: FormulaDetails) {
             </ol>
         </>
     } else {
-        content = <div>Yes null formula</div>
+        content = null;
     }
 
     return content;
