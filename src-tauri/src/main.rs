@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
 use tauri_api::dialog::select;
-use varisat::{cnf, dimacs, solver::Solver, Lit};
+use varisat::{dimacs};
 const EXTENSION: &str = "cnf";
 
 #[derive(Serialize, Deserialize, Default, Debug)]
@@ -47,9 +47,9 @@ fn select_formula() -> FormulaDetails {
         for literal in clause {
             let index = literal.index();
             if literal.is_positive() {
-                literal_counts[index].positive = literal_counts[index].positive + 1;
+                literal_counts[index].positive += 1;
             } else {
-                literal_counts[index].negative = literal_counts[index].negative + 1;
+                literal_counts[index].negative += 1;
             }
         }
     }
@@ -70,7 +70,7 @@ fn expand_formula(file_name: String) -> FormulaDetails {
     parser.parse_chunk(dimacs_cnf.as_slice()).unwrap();
     let cnf_formula = parser.take_formula();
     FormulaDetails {
-        file_name: file_name,
+        file_name,
         num_clauses: 3,
         num_variables: 1,
         counts: vec![],
