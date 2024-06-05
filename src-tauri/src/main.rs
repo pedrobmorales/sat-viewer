@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
 use tauri_api::dialog::select;
-use varisat::{dimacs};
+use varisat::dimacs;
 const EXTENSION: &str = "cnf";
 
 #[derive(Serialize, Deserialize, Default, Debug)]
@@ -14,6 +14,8 @@ pub struct FormulaDetails {
     counts: Vec<LiteralCounts>,
 }
 
+pub mod expand;
+
 #[derive(Serialize, Deserialize, Default, Debug, Clone)]
 pub struct LiteralCounts {
     positive: usize,
@@ -23,9 +25,9 @@ pub struct LiteralCounts {
 #[tauri::command]
 fn select_formula() -> FormulaDetails {
     dbg!("Hi select_formula");
-    let foo = select(Some(EXTENSION), Some(".."));
+    let selected_file_result = select(Some(EXTENSION), Some(".."));
     use tauri_api::dialog::Response::Okay;
-    let choice = if let Ok(Okay(file_name)) = foo {
+    let choice = if let Ok(Okay(file_name)) = selected_file_result {
         file_name
     } else {
         return FormulaDetails::default();
@@ -65,10 +67,11 @@ fn select_formula() -> FormulaDetails {
 #[tauri::command]
 fn expand_formula(file_name: String) -> FormulaDetails {
     dbg!("Hi expand formula");
+
     let dimacs_cnf = fs::read(&file_name).unwrap();
     let mut parser = dimacs::DimacsParser::new();
     parser.parse_chunk(dimacs_cnf.as_slice()).unwrap();
-    let cnf_formula = parser.take_formula();
+    let _cnf_formula = parser.take_formula();
     FormulaDetails {
         file_name,
         num_clauses: 3,
